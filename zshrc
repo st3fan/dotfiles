@@ -28,6 +28,12 @@ alias -g m='more'
 alias -g h='head'
 alias -g t='tail'
 
+# Things that only make sense on Linux
+
+if [ `uname -s` = "Linux" ]; then
+  alias ls='ls -GFh --color=always'
+fi
+
 # Suffix aliases for OS X
 
 if [ `uname -s` = "Darwin" ]; then

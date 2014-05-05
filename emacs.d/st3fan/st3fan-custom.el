@@ -27,14 +27,21 @@
 
 (setq-default indent-tabs-mode nil)     ;
 
-(when (not (featurep 'ns-win))          ; disable the menu when running in the terminal
+(when (not (display-graphic-p))         ; disable the menu when running in the terminal
   (menu-bar-mode -1))
-(tool-bar-mode -1)                      ; kill the toolbar
-(scroll-bar-mode -1)                    ; kill the scrollbar
-(blink-cursor-mode 0)                   ; no blinking cursor please
-(set-fringe-style 0)                    ; no fringe
 
-(desktop-save-mode 1)                   ; save/restore opened files
+(when (display-graphic-p)
+  (tool-bar-mode -1))                   ; kill the toolbar
+
+(when (display-graphic-p)
+  (scroll-bar-mode -1))                 ; kill the scrollbar
+
+(when (display-graphic-p)
+  (set-fringe-style 0))                 ; no fringe
+
+(blink-cursor-mode 0)                   ; no blinking cursor please
+
+(desktop-save-mode 0)                   ; save/restore opened files
 (recentf-mode 1)                        ; keep a list of recently opened files
 
 ;;
