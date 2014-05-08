@@ -197,7 +197,7 @@ alias start-postgresql="postgres -D /usr/local/var/postgres"
 
 # Source in local setup
 
-if [ -f ".zshrc.local" ]; then
-  source .zshrc.local
+if [ -f "$HOME/.zshrc.local" ]; then
+  source "$HOME/.zshrc.local"
 fi
 
