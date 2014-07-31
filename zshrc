@@ -195,6 +195,13 @@ fi
 
 alias start-postgresql="postgres -D /usr/local/var/postgres"
 
+# I keep my Go home and projects on Dropbox
+
+if [ -d "$HOME/Dropbox/Go" ]; then
+  GOPATH="$HOME/Dropbox/Go"
+  PATH="$GOPATH/bin:$PATH"
+fi
+
 # Source in local setup
 
 if [ -f "$HOME/.zshrc.local" ]; then

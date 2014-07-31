@@ -1,7 +1,7 @@
 ;; st3fan-theme.el
 
 (if (eq window-system 'ns)
-  (load-theme 'flatui t)
+    (load-theme 'flatui t)
   (load-theme 'cyberpunk t))
 
 (when (eq window-system 'ns)
@@ -9,3 +9,6 @@
   (set-frame-width (selected-frame) 100)
   (custom-set-faces
    '(default ((t (:height 140 :width normal :family "Menlo"))))))
+
+;;(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+;;(load-theme 'hickey t)

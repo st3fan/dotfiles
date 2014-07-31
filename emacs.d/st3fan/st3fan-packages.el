@@ -1,7 +1,7 @@
 
 (require 'package)
 
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+;;(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives '("melpa"     . "http://melpa.milkbox.net/packages/")  t)
 (package-initialize)
 
@@ -16,6 +16,8 @@
     cider                         ; https://github.com/clojure-emacs/cider
     gist                          ; https://github.com/defunkt/gist.el
     ack-and-a-half                ; https://github.com/jhelwig/ack-and-a-half
+    swift-mode                    ; https://github.com/chrisbarrett/swift-mode
+    flycheck                      ; https://github.com/flycheck/flycheck
     go-mode
     smartparens
     expand-region

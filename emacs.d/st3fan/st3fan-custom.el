@@ -18,7 +18,7 @@
 
 (recentf-mode 1)                        ; keep a list of recently opened files
 
-(global-hl-line-mode 1)                 ; turn on highlighting current line
+;;(global-hl-line-mode 1)                 ; turn on highlighting current line
 
 (setq inhibit-splash-screen t)          ;
 
@@ -80,3 +80,16 @@
 (defalias 'ack-same 'ack-and-a-half-same)
 (defalias 'ack-find-file 'ack-and-a-half-find-file)
 (defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
+
+;; dired
+
+(setq dired-listing-switches "-alh")
+
+;; Change the *scratch* buffer to text mode.
+
+(setq initial-major-mode 'text-mode)
+
+(setq initial-scratch-message "\
+# This buffer is for notes you don't want to save. If you want to
+# create a file, visit that file with C-x C-f, then enter the text
+# in that file's own buffer.\n")
