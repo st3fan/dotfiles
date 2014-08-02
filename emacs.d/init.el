@@ -22,5 +22,6 @@
   (load "st3fan-whitespace.el")
   (load "st3fan-clojure.el")
   (load "st3fan-go.el")
-  (load "st3fan-flycheck.el")
-  (load "st3fan-custom.el"))
+  ;;(load "st3fan-flycheck.el")
+  (load "st3fan-custom.el")
+  (load "st3fan-functions.el"))

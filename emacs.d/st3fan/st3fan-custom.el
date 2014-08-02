@@ -18,7 +18,7 @@
 
 (recentf-mode 1)                        ; keep a list of recently opened files
 
-;;(global-hl-line-mode 1)                 ; turn on highlighting current line
+(global-hl-line-mode 1)                 ; turn on highlighting current line
 
 (setq inhibit-splash-screen t)          ;
 
@@ -46,8 +46,8 @@
 
 ;;
 
-(require 'expand-region)
-(global-set-key (kbd "M-e") 'er/expand-region)
+;;(require 'expand-region)
+;;(global-set-key (kbd "M-e") 'er/expand-region)
 
 ;;
 
