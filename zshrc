@@ -88,6 +88,7 @@ setup_paths /usr/local/apache-maven
 setup_paths /usr/local/apache-ant
 setup_paths /usr/local/CrossPack-AVR
 setup_paths /opt/local/Library/Frameworks/Python.framework/Versions/2.6
+setup_paths /usr/local/go
 
 # Android SDK Stuff
 
