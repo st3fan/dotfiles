@@ -1,0 +1,8 @@
+[user]
+	name = Stefan Arentz
+	email = stefan@arentz.ca
+[push]
+	default = simple
+[include]
+	path = ~/.gitconfig.local
+
