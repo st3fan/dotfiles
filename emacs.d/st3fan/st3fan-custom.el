@@ -1,8 +1,8 @@
 ;; st3fan-custom.el
 
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode 1)
+;;(setq ido-enable-flex-matching t)
+;;(setq ido-everywhere t)
+;;(ido-mode 1)
 
 (transient-mark-mode 1)                 ; highlight text selection
 (delete-selection-mode 1)               ; delete seleted text when typing
@@ -40,6 +40,8 @@
   (set-fringe-style 0))                 ; no fringe
 
 (blink-cursor-mode 0)                   ; no blinking cursor please
+
+(setq ring-bell-function 'ignore)       ; stop beeping
 
 (desktop-save-mode 0)                   ; save/restore opened files
 (recentf-mode 1)                        ; keep a list of recently opened files
