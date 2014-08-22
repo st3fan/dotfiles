@@ -27,3 +27,8 @@
   (load "st3fan-functions.el")
   (add-to-list 'load-path "~/.emacs.d")
   (load "init.local.el"))
+
+;; Store custom-set-variables in it's own file instead of here
+
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
