@@ -22,6 +22,7 @@
     smartparens
     expand-region
     rainbow-delimiters
+    helm
     magit)
   "list of packages to ensure are installed at launch.")
 

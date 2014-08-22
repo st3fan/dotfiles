@@ -25,6 +25,7 @@
   ;;(load "st3fan-flycheck.el")
   (load "st3fan-custom.el")
   (load "st3fan-functions.el")
+  (load "st3fan-helm.el")
   (add-to-list 'load-path "~/.emacs.d")
   (load "init.local.el"))
 
