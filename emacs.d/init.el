@@ -14,19 +14,19 @@
 
 ;; TODO: Remove that silly st3fan- prefix from all files.
 
-(progn
-  (add-to-list 'load-path "~/.emacs.d/st3fan/")
-  (load "st3fan-packages.el")
-  (load "st3fan-paths.el")
-  (load "st3fan-theme.el")
-  (load "st3fan-whitespace.el")
-  (load "st3fan-clojure.el")
-  (load "st3fan-go.el")
-  ;;(load "st3fan-flycheck.el")
-  (load "st3fan-custom.el")
-  (load "st3fan-functions.el")
-  (load "st3fan-helm.el")
-  (add-to-list 'load-path "~/.emacs.d")
+(add-to-list 'load-path "~/.emacs.d/st3fan/")
+(load "st3fan-packages.el")
+(load "st3fan-paths.el")
+(load "st3fan-theme.el")
+(load "st3fan-whitespace.el")
+(load "st3fan-clojure.el")
+(load "st3fan-go.el")
+;;(load "st3fan-flycheck.el")
+(load "st3fan-custom.el")
+(load "st3fan-functions.el")
+(load "st3fan-helm.el")
+
+(when (file-exists-p "~/.emacs.d/init.local.el")
   (load "init.local.el"))
 
 ;; Store custom-set-variables in it's own file instead of here
