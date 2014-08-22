@@ -113,3 +113,16 @@
   (jump-to-register :magit-fullscreen))
 
 (define-key magit-status-mode-map (kbd "q") 'magit-quit-session)
+
+;; Disable mouse wheel (and two finger swipe) scrolling because it scrolls horribly
+
+(mouse-wheel-mode -1)
+
+(global-set-key [wheel-up] 'ignore)
+(global-set-key [wheel-down] 'ignore)
+
+(global-set-key [double-wheel-up] 'ignore)
+(global-set-key [double-wheel-down] 'ignore)
+
+(global-set-key [triple-wheel-up] 'ignore)
+(global-set-key [triple-wheel-down] 'ignore)
