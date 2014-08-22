@@ -18,9 +18,25 @@
     (load-theme 'flatui t)
   (load-theme 'cyberpunk t))
 
+;; Change font to Menlo if we are on OS X
+
 (when (eq window-system 'ns)
   (when (eq system-type 'darwin)
-    (set-frame-height (selected-frame) 42)
-    (set-frame-width (selected-frame) 120)
     (custom-set-faces
      '(default ((t (:height 110 :family "Menlo")))))))
+
+;; Some custom faces that I like on top of flatui
+
+(when (eq window-system 'ns)
+  (custom-set-faces
+   '(default ((t (:height 110 :family "Menlo"))))
+   '(mode-line ((t (:background "gridColor" :foreground "labelColor" :box nil))))
+   '(mode-line-buffer-id ((t (:foreground "#e74c3c" :weight normal))))
+   '(mode-line-highlight ((t nil)))
+   '(mode-line-inactive ((t (:background "controlHighlightColor" :foreground "scrollBarColor" :box nil))))))
+
+;; Change the window size - Should do this based on screen size
+
+(when (eq window-system 'ns)
+  (set-frame-height (selected-frame) 42)
+  (set-frame-width (selected-frame) 120))
