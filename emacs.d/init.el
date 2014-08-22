@@ -30,5 +30,6 @@
 
 ;; Store custom-set-variables in it's own file instead of here
 
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(when (file-exists-p "~/.emacs.d/custom.el")
+  (setq custom-file "~/.emacs.d/custom.el")
+  (load custom-file))
