@@ -13,6 +13,7 @@ setopt hist_ignore_dups				# Ignore duplicate commands
 setopt extended_history				# Save timestamps in history file
 setopt no_beep						# No beeping. I hate beeping shells.
 setopt complete_in_word				# Complete inside words
+setopt HIST_IGNORE_SPACE
 
 watch=(notme)						# Watch others
 
