@@ -162,12 +162,15 @@
 (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/auto-save-list/" t)))
 
 ;; ==========================================================================
-;; Customizations
+;; IDO Mode
 ;; ==========================================================================
 
-;;(setq ido-enable-flex-matching t)
-;;(setq ido-everywhere t)
-;;(ido-mode 1)
+(ido-mode 1)
+(setq ido-auto-merge-work-directories-length -1)
+
+;; ==========================================================================
+;; Customizations
+;; ==========================================================================
 
 (transient-mark-mode 1)                 ; highlight text selection
 (delete-selection-mode 1)               ; delete seleted text when typing
