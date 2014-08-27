@@ -53,6 +53,7 @@
     ack-and-a-half                ; https://github.com/jhelwig/ack-and-a-half
     swift-mode                    ; https://github.com/chrisbarrett/swift-mode
     flycheck                      ; https://github.com/flycheck/flycheck
+    multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     go-mode
     smartparens
     expand-region
@@ -108,6 +109,12 @@
 (when (eq window-system 'ns)
   (set-frame-height (selected-frame) 42)
   (set-frame-width (selected-frame) 120))
+
+;; ==========================================================================
+;; Multiple cursors
+;; ==========================================================================
+
+(require 'multiple-cursors)
 
 ;; ==========================================================================
 ;; Whitespace
