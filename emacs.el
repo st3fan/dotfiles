@@ -120,7 +120,7 @@
 ;; Whitespace
 ;; ==========================================================================
 
-(setq whitespace-line-column 100)
+(setq whitespace-line-column 120)
 (setq whitespace-style '(face trailing lines-tail))
 
 (add-hook 'python-mode-hook 'whitespace-mode)
