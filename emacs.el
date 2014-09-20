@@ -179,6 +179,8 @@
 ;; Customizations
 ;; ==========================================================================
 
+(set-default 'truncate-lines t)         ; I don't like line wrapping
+
 (transient-mark-mode 1)                 ; highlight text selection
 (delete-selection-mode 1)               ; delete seleted text when typing
 
