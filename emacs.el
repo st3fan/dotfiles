@@ -153,7 +153,9 @@
 
 (add-hook 'go-mode-hook (lambda ()
                           (setq indent-tabs-mode t)
-                          (setq tab-width 4)))
+                          (setq tab-width 4)
+                          (setq compile-command "go build")
+                          (local-set-key (kbd "C-c k") #'recompile)))
 
 ;; ==========================================================================
 ;; Backups and Autosave - I actually do like to have backup files, just not
