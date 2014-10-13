@@ -56,6 +56,7 @@
     multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     go-mode
     go-eldoc
+    web-mode
     smartparens
     expand-region
     rainbow-delimiters
