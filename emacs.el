@@ -55,6 +55,8 @@
     flycheck                      ; https://github.com/flycheck/flycheck
     multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     go-mode
+    go-eldoc
+    web-mode
     smartparens
     expand-region
     rainbow-delimiters
@@ -152,10 +154,14 @@
 (add-hook 'before-save-hook #'gofmt-before-save)
 
 (add-hook 'go-mode-hook (lambda ()
+                          (setq truncate-lines t)
                           (setq indent-tabs-mode t)
                           (setq tab-width 4)
                           (setq compile-command "go build")
-                          (local-set-key (kbd "C-c k") #'recompile)))
+                          (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
+                          (local-set-key (kbd "C-c k") #'recompile)
+                          (go-eldoc-setup)
+			  (set-face-attribute 'eldoc-highlight-function-argument nil :foreground "green")))
 
 ;; ==========================================================================
 ;; Backups and Autosave - I actually do like to have backup files, just not
@@ -180,8 +186,6 @@
 ;; ==========================================================================
 ;; Customizations
 ;; ==========================================================================
-
-(set-default 'truncate-lines t)         ; I don't like line wrapping
 
 (transient-mark-mode 1)                 ; highlight text selection
 (delete-selection-mode 1)               ; delete seleted text when typing
