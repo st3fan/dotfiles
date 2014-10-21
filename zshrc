@@ -211,5 +211,6 @@ if [ -f "$HOME/.zshrc.local" ]; then
 fi
 
 
-# added by travis gem
-[ -f /home/stefan/.travis/travis.sh ] && source /home/stefan/.travis/travis.sh
+# Added by travis gem
+[ -f "$HOME/.travis/travis.sh" ] && source "$HOME/.travis/travis.sh"
+
