@@ -54,6 +54,7 @@
     swift-mode                    ; https://github.com/chrisbarrett/swift-mode
     flycheck                      ; https://github.com/flycheck/flycheck
     multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
+    exec-path-from-shell          ; https://github.com/purcell/exec-path-from-shell
     go-mode
     go-eldoc
     web-mode
@@ -66,6 +67,13 @@
 (dolist (p my-packages)
   (when (not (package-installed-p p))
     (package-install p)))
+
+;; ==========================================================================
+;; Initialize things from the UNIX env
+;; ==========================================================================
+
+(when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize))
 
 ;; ==========================================================================
 ;; Setup themes and UI changes
@@ -150,6 +158,8 @@
 ;; ==========================================================================
 ;; Go
 ;; ==========================================================================
+
+(exec-path-from-shell-copy-env "GOPATH")
 
 (add-hook 'before-save-hook #'gofmt-before-save)
 
