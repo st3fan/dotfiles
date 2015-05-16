@@ -46,18 +46,14 @@
 (defvar my-packages
   '(cyberpunk-theme
     flatui-theme
-    clojure-mode
-    clojure-test-mode
-    cider                         ; https://github.com/clojure-emacs/cider
     yagist                        ; https://github.com/mhayashi1120/yagist.el
-    ack-and-a-half                ; https://github.com/jhelwig/ack-and-a-half
     swift-mode                    ; https://github.com/chrisbarrett/swift-mode
     flycheck                      ; https://github.com/flycheck/flycheck
     multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     go-mode
     go-eldoc
     web-mode
-    smartparens
+    paredit
     expand-region
     rainbow-delimiters
     magit)
@@ -98,18 +94,18 @@
 
 ;; Some custom faces that I like on top of flatui
 
-(when (eq window-system 'ns)
-  (custom-set-faces
-   '(default ((t (:height 110 :family "Menlo"))))
-   '(mode-line ((t (:background "gridColor" :foreground "labelColor" :box nil))))
-   '(mode-line-buffer-id ((t (:foreground "#e74c3c" :weight normal))))
-   '(mode-line-highlight ((t nil)))
-   '(mode-line-inactive ((t (:background "controlHighlightColor" :foreground "scrollBarColor" :box nil))))))
+;; (when (eq window-system 'ns)
+;;   (custom-set-faces
+;;    '(default ((t (:height 110 :family "Menlo"))))
+;;    '(mode-line ((t (:background "gridColor" :foreground "labelColor" :box nil))))
+;;    '(mode-line-buffer-id ((t (:foreground "#e74c3c" :weight normal))))
+;;    '(mode-line-highlight ((t nil)))
+;;    '(mode-line-inactive ((t (:background "controlHighlightColor" :foreground "scrollBarColor" :box nil))))))
 
 ;; Change the window size - Should do this based on screen size
 
 (when (eq window-system 'ns)
-  (set-frame-height (selected-frame) 42)
+  (set-frame-height (selected-frame) 48)
   (set-frame-width (selected-frame) 120))
 
 ;; ==========================================================================
@@ -126,7 +122,6 @@
 (setq whitespace-style '(face trailing lines-tail))
 
 (add-hook 'python-mode-hook 'whitespace-mode)
-(add-hook 'clojure-mode-hook 'whitespace-mode)
 (add-hook 'c-mode-hook 'whitespace-mode)
 (add-hook 'c++-mode-hook 'whitespace-mode)
 
@@ -145,7 +140,7 @@
 (setq cider-repl-history-file "~/.cider-repl-history")
 
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
+;;(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
 
 ;; ==========================================================================
 ;; Go
@@ -232,8 +227,8 @@
 
 ;;
 
-;;(require 'expand-region)
-;;(global-set-key (kbd "M-e") 'er/expand-region)
+(require 'expand-region)
+(global-set-key (kbd "M-e") 'er/expand-region)
 
 ;;
 
@@ -248,17 +243,6 @@
 ;;
 
 ;;(smartparens-global-mode t)
-
-;; ==========================================================================
-;; ack-and-a-half
-;; ==========================================================================
-
-(require 'ack-and-a-half)
-
-(defalias 'ack 'ack-and-a-half)
-(defalias 'ack-same 'ack-and-a-half-same)
-(defalias 'ack-find-file 'ack-and-a-half-find-file)
-(defalias 'ack-find-file-same 'ack-and-a-half-find-file-same)
 
 ;; ==========================================================================
 ;; dired
@@ -364,3 +348,18 @@ point reaches the beginning or end of the buffer, stop there."
 
 (when (file-exists-p "~/.emacs.local.el")
   (load "~/.emacs.local.el"))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("90edd91338ebfdfcd52ecd4025f1c7f731aced4c9c49ed28cfbebb3a3654840b" "282606e51ef2811142af5068bd6694b7cf643b27d63666868bc97d04422318c1" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "a041a61c0387c57bb65150f002862ebcfe41135a3e3425268de24200b82d6ec9" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" default)))
+ '(fci-rule-color "#383838"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

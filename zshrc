@@ -199,9 +199,13 @@ alias start-postgresql="postgres -D /usr/local/var/postgres"
 
 # I keep my Go home and projects on Dropbox
 
-if [ -d "$HOME/Dropbox/Go" ]; then
-  GOPATH="$HOME/Dropbox/Go"
-  PATH="$GOPATH/bin:$PATH"
+if [ -d "$HOME/Go" ]; then
+  export GOPATH="$HOME/Go"
+  export PATH="$GOPATH/bin:$PATH"
+fi
+
+if [ -d "/usr/local/opt/go/libexec/bin" ]; then
+  export PATH=$PATH:/usr/local/opt/go/libexec/bin
 fi
 
 # Source in local setup
