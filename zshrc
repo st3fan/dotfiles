@@ -25,10 +25,6 @@ alias ls='ls -GF'
 alias ll='ls -l'
 alias la='ls -la'
 
-alias -g m='more'
-alias -g h='head'
-alias -g t='tail'
-
 # Things that only make sense on Linux
 
 if [ `uname -s` = "Linux" ]; then
@@ -148,7 +144,7 @@ fi
 # Setup completion
 
 autoload -U compinit
-compinit
+compinit -u
 
 zstyle '*' hosts pegasus.local galactica.local viper.local \
 	home.local appletv.local satelefoon.local \
@@ -159,25 +155,31 @@ zstyle '*' hosts pegasus.local galactica.local viper.local \
 
 # Setup the VCS Module
 
-#autoload -Uz vcs_info
-# 
-#zstyle ':vcs_info:*' stagedstr '%F{28}●'
-#zstyle ':vcs_info:*' unstagedstr '%F{11}●'
-#zstyle ':vcs_info:*' check-for-changes true
-#zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
-#zstyle ':vcs_info:*' enable git svn hg
-#precmd () {
-#    zstyle ':vcs_info:*' formats ' [%F{green}%b%u%F{blue}]'
-#    vcs_info
-#}
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+precmd() {
+    vcs_info
+}
+ 
+zstyle ':vcs_info:*' stagedstr '%F{28}●'
+zstyle ':vcs_info:*' unstagedstr '%F{11}●'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b%F{1}:%F{11}%r'
+zstyle ':vcs_info:*' enable git svn hg
+precmd () {
+    zstyle ':vcs_info:*' formats '%F{blue}(%F{green}%b%u%F{blue}) '
+    vcs_info
+}
  
 # Set a prompt. Only show the hostname if we are not local.
 
+setopt prompt_subst
+
 if [ -n "$SSH_TTY" ]; then
   # If we are remote then we display the machine name
-  PS1=$'%m %4 %{\e[31m%}%#%{\e[0m%} '
+  PS1=$'${vcs_info_msg_0_}%m %4 %{\e[31m%}%#%{\e[0m%} '
 else
-  PS1=$'%4 %{\e[31m%}%#%{\e[0m%} '
+  PS1=$'${vcs_info_msg_0_}%4 %{\e[31m%}%#%{\e[0m%} '
 fi
 
 if [ -x /usr/bin/sw_vers ]; then
