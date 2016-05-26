@@ -20,8 +20,8 @@
 ;; Store custom-set-variables in it's own file instead of here
 ;; ==========================================================================
 
+(setq custom-file "~/.emacs.d/custom.el")
 (when (file-exists-p "~/.emacs.d/custom.el")
-  (setq custom-file "~/.emacs.d/custom.el")
   (load custom-file))
 
 ;; ==========================================================================
@@ -36,21 +36,32 @@
 ;; ==========================================================================
 
 (require 'package)
+(setq package-enable-at-startup nil)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(package-initialize)
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
 (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
 (defvar my-packages
-  '(cyberpunk-theme
+  '(atom-dark-theme
+    cyberpunk-theme
     flatui-theme
+    airline-themes                ; https://github.com/AnthonyDiGirolamo/airline-themes
     yagist                        ; https://github.com/mhayashi1120/yagist.el
     swift-mode                    ; https://github.com/chrisbarrett/swift-mode
     flycheck                      ; https://github.com/flycheck/flycheck
     multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     exec-path-from-shell          ; https://github.com/purcell/exec-path-from-shell
+    anzu                          ; https://github.com/syohex/emacs-anzu
+    company
+    company-go
     go-mode
     go-eldoc
     web-mode
@@ -89,9 +100,15 @@
   (add-hook 'minibuffer-setup-hook 'remap-faces-default-attributes)
   (add-hook 'change-major-mode-after-body-hook 'remap-faces-default-attributes))
 
-(if (eq window-system 'ns)
-  (load-theme 'flatui t)
-  (load-theme 'cyberpunk t))
+;;;(if (eq window-system 'ns)
+;;;    (load-theme 'flatui t)
+;;;  (progn
+;;;    (load-theme 'atom-dark t)))
+
+(use-package zenburn-theme
+  :ensure t
+  :config
+  (load-theme 'zenburn t))
 
 ;; Change font to Menlo if we are on OS X
 
@@ -137,26 +154,36 @@
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 (add-hook 'prog-mode-hook 'st3fan/whitespace-hook)
 
+;; Anzu
+
+(global-anzu-mode +1)
+(global-set-key (kbd "M-%") 'anzu-query-replace)
+(global-set-key (kbd "C-M-%") 'anzu-query-replace-regexp)
+
 ;; ==========================================================================
-;; Clojure
+;; Flycheck
 ;; ==========================================================================
 
-(setq nrepl-hide-special-buffers t)
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
-(setq cider-repl-history-size 1000)
-(setq cider-repl-history-file "~/.cider-repl-history")
+;; ==========================================================================
+;; Flycheck
+;; ==========================================================================
 
-(add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-;;(add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; ==========================================================================
 ;; Go
+;; go get -u github.com/nsf/gocode
+;; go get -u code.google.com/p/go.tools/cmd/goimports
+;; go get -u code.google.com/p/rog-go/exp/cmd/godef
 ;; ==========================================================================
 
 (exec-path-from-shell-copy-env "GOPATH")
 
-(add-hook 'before-save-hook #'gofmt-before-save)
+(add-hook 'before-save-hook 'gofmt-before-save)
+
+(setq gofmt-command "goimports")
 
 (add-hook 'go-mode-hook (lambda ()
                           (setq truncate-lines t)
@@ -164,9 +191,16 @@
                           (setq tab-width 4)
                           (setq compile-command "go build")
                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
-                          (local-set-key (kbd "C-c k") #'recompile)
+                          (local-set-key (kbd "C-c k") 'recompile)
+                          (local-set-key (kbd "C-c C-f") 'gofmt)
+                          (local-set-key (kbd "C-c C-k") 'godoc)
                           (go-eldoc-setup)
-			  (set-face-attribute 'eldoc-highlight-function-argument nil :foreground "green")))
+                          (set-face-attribute 'eldoc-highlight-function-argument nil :foreground "green")))
+
+;;(add-hook 'go-mode-hook 'company-mode)
+(add-hook 'go-mode-hook (lambda ()
+                          (set (make-local-variable 'company-backends) '(company-go))
+                          (company-mode)))
 
 ;; ==========================================================================
 ;; Backups and Autosave - I actually do like to have backup files, just not
@@ -206,7 +240,7 @@
 
 (recentf-mode 1)                        ; keep a list of recently opened files
 
-(global-hl-line-mode 1)                 ; turn on highlighting current line
+;;(global-hl-line-mode 1)                 ; turn on highlighting current line
 
 (setq inhibit-splash-screen t)          ;
 
@@ -253,6 +287,8 @@
 ;;
 
 ;;(smartparens-global-mode t)
+
+(setq vc-follow-symlinks t)
 
 ;; ==========================================================================
 ;; dired
@@ -301,6 +337,12 @@
   (global-set-key [double-wheel-down] 'ignore)
   (global-set-key [triple-wheel-up] 'ignore)
   (global-set-key [triple-wheel-down] 'ignore))
+
+;; ==========================================================================
+;; Key mappings
+;; ==========================================================================
+
+(global-set-key (kbd "M-o") 'other-window)
 
 ;; ==========================================================================
 ;; Random Functions
@@ -358,18 +400,4 @@ point reaches the beginning or end of the buffer, stop there."
 
 (when (file-exists-p "~/.emacs.local.el")
   (load "~/.emacs.local.el"))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("90edd91338ebfdfcd52ecd4025f1c7f731aced4c9c49ed28cfbebb3a3654840b" "282606e51ef2811142af5068bd6694b7cf643b27d63666868bc97d04422318c1" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "a041a61c0387c57bb65150f002862ebcfe41135a3e3425268de24200b82d6ec9" "e80932ca56b0f109f8545576531d3fc79487ca35a9a9693b62bf30d6d08c9aaf" "f0a99f53cbf7b004ba0c1760aa14fd70f2eabafe4e62a2b3cf5cabae8203113b" default)))
- '(fci-rule-color "#383838"))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+
