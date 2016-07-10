@@ -6,7 +6,7 @@
 ;; loading many many times.
 ;; ==========================================================================
 
-(setq gc-cons-threshold (* 32 1024 1024))
+(setq gc-cons-threshold (* 64 1024 1024))
 
 ;; ==========================================================================
 ;; This setup really only works on Emacs 24 and up. So give up right
@@ -21,7 +21,7 @@
 ;; ==========================================================================
 
 (setq custom-file "~/.emacs.d/custom.el")
-(when (file-exists-p "~/.emacs.d/custom.el")
+(when (file-exists-p custom-file)
   (load custom-file))
 
 ;; ==========================================================================
@@ -38,30 +38,25 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+
 (package-initialize)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
+;; (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+;; (package-initialize)
 
 (when (not package-archive-contents)
   (package-refresh-contents))
 
 (defvar my-packages
-  '(atom-dark-theme
-    cyberpunk-theme
-    flatui-theme
-    airline-themes                ; https://github.com/AnthonyDiGirolamo/airline-themes
+  '(cyberpunk-theme
+    kaesar                        ; https://github.com/mhayashi1120/Emacs-kaesar - For yagist
     yagist                        ; https://github.com/mhayashi1120/yagist.el
-    swift-mode                    ; https://github.com/chrisbarrett/swift-mode
     flycheck                      ; https://github.com/flycheck/flycheck
-    multiple-cursors              ; https://github.com/magnars/multiple-cursors.el
     exec-path-from-shell          ; https://github.com/purcell/exec-path-from-shell
     anzu                          ; https://github.com/syohex/emacs-anzu
-    company
-    company-go
     go-mode
     go-eldoc
     web-mode
@@ -100,44 +95,7 @@
   (add-hook 'minibuffer-setup-hook 'remap-faces-default-attributes)
   (add-hook 'change-major-mode-after-body-hook 'remap-faces-default-attributes))
 
-;;;(if (eq window-system 'ns)
-;;;    (load-theme 'flatui t)
-;;;  (progn
-;;;    (load-theme 'atom-dark t)))
-
-(use-package zenburn-theme
-  :ensure t
-  :config
-  (load-theme 'zenburn t))
-
-;; Change font to Menlo if we are on OS X
-
-(when (eq window-system 'ns)
-  (when (eq system-type 'darwin)
-    (custom-set-faces
-     '(default ((t (:height 110 :family "Menlo")))))))
-
-;; Some custom faces that I like on top of flatui
-
-;; (when (eq window-system 'ns)
-;;   (custom-set-faces
-;;    '(default ((t (:height 110 :family "Menlo"))))
-;;    '(mode-line ((t (:background "gridColor" :foreground "labelColor" :box nil))))
-;;    '(mode-line-buffer-id ((t (:foreground "#e74c3c" :weight normal))))
-;;    '(mode-line-highlight ((t nil)))
-;;    '(mode-line-inactive ((t (:background "controlHighlightColor" :foreground "scrollBarColor" :box nil))))))
-
-;; Change the window size - Should do this based on screen size
-
-(when (eq window-system 'ns)
-  (set-frame-height (selected-frame) 48)
-  (set-frame-width (selected-frame) 120))
-
-;; ==========================================================================
-;; Multiple cursors
-;; ==========================================================================
-
-(require 'multiple-cursors)
+(load-theme 'cyberpunk t)
 
 ;; ==========================================================================
 ;; Whitespace
@@ -154,7 +112,21 @@
   (add-hook 'before-save-hook #'delete-trailing-whitespace nil t))
 (add-hook 'prog-mode-hook 'st3fan/whitespace-hook)
 
+;; ==========================================================================
+;; yagist
+;; ==========================================================================
+
+(let ((gls "/usr/local/bin/gls"))
+  (if (file-exists-p gls)
+      (setq insert-directory-program gls)))
+
+
+(setq yagist-encrypt-risky-config t)
+(setq yagist-github-token "35461ffc50bc1c862eebd82ac677f789659c8415")
+
+;; ==========================================================================
 ;; Anzu
+;; ==========================================================================
 
 (global-anzu-mode +1)
 (global-set-key (kbd "M-%") 'anzu-query-replace)
@@ -175,25 +147,31 @@
 ;; ==========================================================================
 ;; Go
 ;; go get -u github.com/nsf/gocode
-;; go get -u code.google.com/p/go.tools/cmd/goimports
-;; go get -u code.google.com/p/rog-go/exp/cmd/godef
+;; go get -u golang.org/x/tools/cmd/goimports
+;; go get -u github.com/rogpeppe/godef
 ;; ==========================================================================
 
 (exec-path-from-shell-copy-env "GOPATH")
 
-(add-hook 'before-save-hook 'gofmt-before-save)
-
-(setq gofmt-command "goimports")
-
 (add-hook 'go-mode-hook (lambda ()
+                          ;; Prefer goimports over gofmt
+                          (setq gofmt-command "goimports")
+                          (add-hook 'before-save-hook 'gofmt-before-save)
+                          ;; Code style
                           (setq truncate-lines t)
                           (setq indent-tabs-mode t)
                           (setq tab-width 4)
-                          (setq compile-command "go build")
+                          ;;
+                          ;;(setq compile-command "go build")
+                          (set (make-local-variable 'compile-command)
+                               "go build -v && go test -v && go vet")
+                          ;;
                           (local-set-key (kbd "C-c C-r") 'go-remove-unused-imports)
                           (local-set-key (kbd "C-c k") 'recompile)
                           (local-set-key (kbd "C-c C-f") 'gofmt)
                           (local-set-key (kbd "C-c C-k") 'godoc)
+                          (local-set-key (kbd "M-.") 'godef-jump)
+                          ;; Go eldoc
                           (go-eldoc-setup)
                           (set-face-attribute 'eldoc-highlight-function-argument nil :foreground "green")))
 
@@ -400,4 +378,3 @@ point reaches the beginning or end of the buffer, stop there."
 
 (when (file-exists-p "~/.emacs.local.el")
   (load "~/.emacs.local.el"))
-

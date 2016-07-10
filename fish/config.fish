@@ -1,11 +1,23 @@
-
-set -x GOPATH $HOME/Go
-set -x PATH $PATH $GOPATH/bin
-
-set -x PATH $PATH /usr/local/CrossPack-AVR/bin/
-
 # Do not show fish welcome message
 set fish_greeting
+
+if test -d ~/Go
+  set -x GOPATH ~/Go
+  set -x PATH $PATH $GOPATH/bin
+end
+
+if test -d /usr/local/CrossPack-AVR
+  set -x PATH $PATH /usr/local/CrossPack-AVR/bin/
+end
+
+if test -d /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/
+  set -x PATH $PATH /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/
+end
+
+if test -d /Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin
+  echo "[*] Preferring latest swift toolchain"
+  set -x PATH /Library/Developer/Toolchains/swift-latest.xctoolchain/usr/bin $PATH
+end
 
 # To make manpages more colorful
 set -xU LESS_TERMCAP_mb (printf "\e[01;31m")      # begin blinking
