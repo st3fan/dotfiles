@@ -1,29 +1,15 @@
-# Start or re-use a gpg-agent.
-#
-# Assumes gpg-agent writes its environment info in ~/.gpg-agent-info.
-#
-# Sets the gpg-agent environment stuff as universal variables, so it
-# takes effect across all shells.
 
-function __refresh_gpg_agent_info -d "Re-load ~/.gpg-agent-info into environment"
-	cat ~/.gpg-agent-info | sed 's/=/ /' | while read key value
-		set -e $key
-		set -U -x $key "$value"
-	end
+if not begin
+    # Is the agent running already? Does the agent-info file exist,
+    # and if so, is there a process with the pid given in the file?
+    [ -f ~/.gpg-agent-info ]
+    and kill -0 (cut -d : -f 2 ~/.gpg-agent-info) ^/dev/null
+end
+    # no, it is not running. Start it!
+    gpg-agent --daemon --no-grab --write-env-file ~/.gpg-agent-info >/dev/null ^&1
 end
 
-if not set -q -x GPG_AGENT_INFO
-	gpg-agent --daemon --write-env-file ~/.gpg-agent-info
-end
+# get the agent info from the info file, and export it so GPG can see it.
+set -gx GPG_AGENT_INFO (cut -c 16- ~/.gpg-agent-info)
+set -gx GPG_TTY (tty)
 
-if test -f ~/.gpg-agent-info
-	__refresh_gpg_agent_info
-	export GPG_TTY=(tty)
-
-	gpg-connect-agent /bye ^/dev/null
-	if test $status -eq 1
-		pkill -U $USER gpg-agent
-		gpg-agent --daemon --write-env-file ~/.gpg-agent-info >/dev/null
-		__refresh_gpg_agent_info
-	end
-end
