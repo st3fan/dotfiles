@@ -69,3 +69,21 @@
    `(company-scrollbar-fg ((t (:background ,(color-lighten-name bg 5)))))
    `(company-tooltip-selection ((t (:inherit font-lock-function-name-face))))
    `(company-tooltip-common ((t (:inherit font-lock-constant-face))))))
+
+(setq magit-last-seen-setup-instructions "1.4.0")
+
+(when (featurep 'ns-win)
+  (custom-set-faces '(default ((t (:height 120 :family "Source Code Pro"))))))
+
+(setq-default c-basic-offset 3)
+
+(setq sql-postgres-login-params
+      '((user :default "stefan")
+        (database :default "stefan")
+        (server :default "localhost")
+        (port :default 5432)))
+
+(add-hook 'sql-interactive-mode-hook
+          (lambda ()
+            (toggle-truncate-lines t)))
+
