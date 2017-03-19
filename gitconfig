@@ -1,6 +1,7 @@
 [user]
 	name = Stefan Arentz
 	email = stefan@arentz.ca
+	signingkey = 8313AE2A
 [push]
 	default = simple
 [include]
@@ -12,5 +13,7 @@
 	diff = auto
 	interactive = auto
 	status = auto
-[pager]
-	status = true
+[commit]
+	gpgsign = true
+[gpg]
+	program = gpg2
