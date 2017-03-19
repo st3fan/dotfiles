@@ -1,11 +1,11 @@
 ;;
 
-(unless (< 24 emacs-major-version)
-  (error "requires Emacs 24 or later."))
+(if (< emacs-major-version 25)
+  (error "requires Emacs 25 or later."))
 
 ;;
 
-(setq gc-cons-threshold (* 64 1024 1024))
+(setq gc-cons-threshold (* 128 1024 1024))
 
 ;;
 
@@ -26,26 +26,36 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; The following paths do not exist everywhere but they are common enough to add without checks.
+;; ;; ==========================================================================
+;; ;; The following paths do not exist everywhere but they are common
+;; ;; enough to add without checks. Both go in front of PATH so that we
+;; ;; can override commands like ctags.
+;; ;; ==========================================================================
 
-(add-to-list 'exec-path "/usr/local/bin")
-(add-to-list 'exec-path "~/bin")
-(add-to-list 'exec-path "~/go/bin")
+;; (push "/usr/local/bin" exec-path)
+;; (push "~/go/bin" exec-path)
 
 ;; ==========================================================================
 ;; Configure packages
 ;; ==========================================================================
 
+(use-package exec-path-from-shell
+  :if window-system
+  :ensure t
+  :config (exec-path-from-shell-initialize))
+
 (use-package whitespace
   :ensure t
   :diminish whitespace-mode
-  :config (setq whitespace-line-column 120 whitespace-style '(face trailing lines-tail))
-  (add-hook 'prog-mode-hook 'whitespace-mode))
+  :config (setq whitespace-line-column 120
+                whitespace-style '(face trailing lines-tail))
+            (add-hook 'prog-mode-hook 'whitespace-mode))
 
 (use-package whitespace-cleanup-mode
   :ensure t
   :diminish whitespace-cleanup-mode
-  :config (global-whitespace-cleanup-mode) (add-hook 'cc-mode-hook 'whitespace-cleanup-mode))
+  :config (global-whitespace-cleanup-mode)
+            (add-hook 'cc-mode-hook 'whitespace-cleanup-mode))
 
 (use-package magit
   :ensure t
@@ -83,18 +93,21 @@
 
 (use-package go-eldoc
   :ensure t
-  :init (add-hook 'go-mode-hook (lambda ()
-                                  (go-eldoc-setup)))) ;; TODO better way?
+  :init (add-hook 'go-mode-hook
+                  (lambda ()
+                    (go-eldoc-setup)))) ;; TODO better way?
 
 (use-package company
   :ensure t
+  :diminish company-mode
   :init (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package company-go
   :ensure t
-  :init (add-hook 'go-mode-hook (lambda ()
-                                  (set (make-local-variable 'company-backends) '(company-go))
-                                  (company-mode))))
+  :init (add-hook 'go-mode-hook
+                  (lambda ()
+                    (set (make-local-variable 'company-backends) '(company-go))
+                    (company-mode))))
 
 (use-package rainbow-delimiters
   :ensure t
@@ -104,33 +117,19 @@
   :ensure t
   :mode ("\\.html$" . web-mode))
 
-(use-package smex
-  :ensure t
-  :bind (("M-x" . smex))
-  :config (smex-initialize))
-
-;; (use-package cyberpunk-theme
+;; (use-package smex
 ;;   :ensure t
-;;   :config (load-theme 'cyberpunk t))
-
-;; (use-package color-theme-sanityinc-tomorrow
-;;   :ensure t
-;;   :init
-;;     (require 'color-theme-sanityinc-tomorrow)
-;;     (color-theme-sanityinc-tomorrow-bright))
+;;   :bind (("M-x" . smex))
+;;   :config (smex-initialize))
 
 (use-package gruvbox-theme
   :ensure t
   :config (load-theme 'gruvbox t))
 
-;; (use-package git-gutter
-;;   :ensure t
-;;   :diminish git-gutter-mode
-;;   :config (global-git-gutter-mode))
-
 (use-package git-gutter-fringe
+  :if window-system
   :ensure t
-  :diminish git-gutter-fringe-mode
+  :diminish git-gutter-mode
   :config (global-git-gutter-mode))
 
 (use-package paren
@@ -143,23 +142,16 @@
   :ensure t
   :init (global-hl-line-mode))
 
-(use-package go-playground
-  :ensure t
-  :config (setq go-playground-basedir "~/Go/src/github.com/st3fan/goplaygrounds"
-                go-playground-ask-for-file-name t)
-  :bind ("C-c r" . go-playground-save-and-run))
-
-;; (use-package yasnippet
-;;   :ensure t
-;;   :config (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-;;   :init (yas-global-mode 1))
-
 (use-package cc-mode
-  :config (setq c-default-style "ellemtel"))
+  :config (setq c-default-style "ellemtel"
+                c-basic-offset 3))
 
-;; (use-package helm
-;;   :ensure t
-;;   :config (helm-mode t))
+(use-package linum-mode
+  :init (add-hook 'prog-mode-hook 'linum-mode))
+(setq linum-format " %d ")
+
+(use-package projectile
+  :ensure t)
 
 ;; ==========================================================================
 ;; Random customizations
@@ -204,6 +196,31 @@
 
 (desktop-save-mode 0)                   ; save/restore opened files
 (recentf-mode 1)                        ; keep a list of recently opened files
+
+;; ==========================================================================
+;; Prefer Source Code Pro Light and remove all bold and underline faces
+;; ==========================================================================
+
+(when (featurep 'ns-win)
+  (set-face-attribute 'default nil :family "Source Code Pro" :height 170 :weight 'light))
+
+(mapc (lambda (face)
+        (set-face-attribute face nil :weight 'light :underline nil))
+      (face-list))
+
+;; ==========================================================================
+;; Some defaults for SQL Mode
+;; ==========================================================================
+
+(setq sql-postgres-login-params
+      '((user :default (user-login-name))
+        (database :default (user-login-name))
+        (server :default "localhost")
+        (port :default 5432)))
+
+(add-hook 'sql-interactive-mode-hook
+          (lambda ()
+            (toggle-truncate-lines t)))
 
 ;; ==========================================================================
 ;; Finally load a 'local' config, which is not stored in version
