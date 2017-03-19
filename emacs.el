@@ -26,6 +26,12 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+;; The following paths do not exist everywhere but they are common enough to add without checks.
+
+(add-to-list 'exec-path "/usr/local/bin")
+(add-to-list 'exec-path "~/bin")
+(add-to-list 'exec-path "~/go/bin")
+
 ;; ==========================================================================
 ;; Configure packages
 ;; ==========================================================================
@@ -46,12 +52,23 @@
   :commands magit-get-top-dir
   :bind ("C-c g" . magit-status))
 
+(use-package magithub
+  :after magit
+  :config (magithub-feature-autoinject t))
+
 (use-package expand-region
   :init (global-set-key (kbd "M-e") 'er/expand-region))
 
 ;; TODO This should inherit from the shell instead
-(setenv "GOPATH" "/Users/stefan/Go")
-(add-to-list 'exec-path "/Users/stefan/Go/bin")
+;; (setenv "GOPATH" "/Users/stefan/go")
+;; (add-to-list 'exec-path "/Users/stefan/go/bin")
+
+;;
+;; Install the following tools:
+;;
+;;   go get -u -v golang.org/x/tools/cmd/goimports
+;;   go get -u -v github.com/nsf/gocode
+;;
 
 (use-package go-mode
   :ensure t
@@ -68,8 +85,6 @@
   :ensure t
   :init (add-hook 'go-mode-hook (lambda ()
                                   (go-eldoc-setup)))) ;; TODO better way?
-
-;; go get -u github.com/nsf/gocode
 
 (use-package company
   :ensure t
@@ -98,16 +113,25 @@
 ;;   :ensure t
 ;;   :config (load-theme 'cyberpunk t))
 
-(use-package color-theme-sanityinc-tomorrow
+;; (use-package color-theme-sanityinc-tomorrow
+;;   :ensure t
+;;   :init
+;;     (require 'color-theme-sanityinc-tomorrow)
+;;     (color-theme-sanityinc-tomorrow-bright))
+
+(use-package gruvbox-theme
   :ensure t
-  :init
-    (require 'color-theme-sanityinc-tomorrow)
-    (color-theme-sanityinc-tomorrow-bright))
+  :config (load-theme 'gruvbox t))
 
 ;; (use-package git-gutter
 ;;   :ensure t
 ;;   :diminish git-gutter-mode
 ;;   :config (global-git-gutter-mode))
+
+(use-package git-gutter-fringe
+  :ensure t
+  :diminish git-gutter-fringe-mode
+  :config (global-git-gutter-mode))
 
 (use-package paren
   :ensure t
@@ -125,13 +149,17 @@
                 go-playground-ask-for-file-name t)
   :bind ("C-c r" . go-playground-save-and-run))
 
-(use-package yasnippet
-  :ensure t
-  :config (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
-  :init (yas-global-mode 1))
+;; (use-package yasnippet
+;;   :ensure t
+;;   :config (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+;;   :init (yas-global-mode 1))
 
 (use-package cc-mode
   :config (setq c-default-style "ellemtel"))
+
+;; (use-package helm
+;;   :ensure t
+;;   :config (helm-mode t))
 
 ;; ==========================================================================
 ;; Random customizations
@@ -167,8 +195,8 @@
 (when (display-graphic-p)
   (scroll-bar-mode -1))                 ; kill the scrollbar
 
-(when (display-graphic-p)
-  (set-fringe-style 0))                 ; no fringe
+;; (when (display-graphic-p)
+;;   (set-fringe-style 0))                 ; no fringe
 
 (blink-cursor-mode 0)                   ; no blinking cursor please
 
